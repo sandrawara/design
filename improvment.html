@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="sv">
+   <head>
+      <meta charset="UTF-8">
+      <title>Design Challenge Code</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <style>
+         body {
+         font-family: -apple-system, "Segoe UI", Helvetica, sans-serif;
+         font-size: 16px;
+         line-height: 1.5;
+         margin: 0;
+         box-sizing: border-box;
+         }
+         .site {
+         display: grid;
+         grid-template-areas:
+         'navigation header'
+         'navigation sub-navigation'
+         'navigation content';
+         grid-template-rows: 50px 40px 1fr;
+         grid-template-columns: 250px 1fr;
+         min-height: 100vh;
+         }
+         .site-header {
+         grid-area: header;
+         border-bottom: 1px solid #e5e5e5;
+         line-height: 50px;
+         padding: 0 16px;
+         font-weight: 600;
+         font-size: 16px;
+         }
+         .site-navigation {
+         grid-area: navigation;
+         background-color: #222;
+         color: #eee;
+         }
+         .site-navigation h2 {
+         padding: 12px 16px;
+         margin: 0;
+         font-size: 18px;
+         }
+         .site-navigation h3 {
+         padding: 12px 16px 0;
+         margin: 0;
+         font-weight: bold;
+         font-size: 14px;
+         text-transform: uppercase;
+         color: #f0f0f0;
+         }
+         .nav-items {
+         list-style: none;
+         margin: 0;
+         padding: 0;
+         }
+         .nav-item {
+         padding: 8px 16px;
+         }
+         .nav-item.selected {
+         background-color: rgba(255, 255, 255, .16);
+         color: #fff;
+         }
+         .site-sub-navigation {
+         grid-area: sub-navigation;
+         line-height: 40px;
+         border-bottom: 1px solid #e5e5e5;
+         }
+         .sub-nav-items {
+         list-style: none;
+         display: flex;
+         margin: 0;
+         padding: 0;
+         }
+         .sub-nav-item {
+         border-right: 1px solid #e0e0e0;
+         padding: 0 16px;
+         }
+         .sub-nav-item.selected {
+         background-color: #f3f3f3;
+         font-weight: 600;
+         }
+         .site-content {
+         grid-area: content;
+         padding: 0 32px;
+         background-color: #f3f3f3;
+         }
+         .documents {
+         background-color: #fff;
+         border-radius: 4px;
+         box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
+         padding: 32px 32px 64px;
+         max-width: 80%;
+         margin: 32px auto;
+         }
+         .document-tools {
+         display: flex;
+         justify-content: space-between;
+         margin: 0 0 32px 0;
+         }
+         .document-add {
+         border-radius: 4px;
+         font-family: inherit;
+         font-size: 14px;
+         line-height: 16px;
+         outline: 0;
+         padding: 6px 14px;
+         -moz-appearance: none;
+         -webkit-appearance: none;
+         background-color: #0780ff;
+         border-color: transparent;
+         color: #fff;
+         }
+         .document-search {
+         position: relative;
+         }
+         .document-search-input{
+         margin: 0;
+         padding: 4px 6px 4px 30px;
+         font-size: 14px;
+         font-family: inherit;
+         height: 32px;
+         color: #333;
+         background-color: #fff;
+         border: 1px solid #d0d0d0;
+         border-radius: 3px;
+         -webkit-appearance: none;
+         }
+         .document-search::before {
+         content: "";
+         display: block;
+         position: absolute;
+         width: 20px;
+         height: 20px;
+         background-size: 14px;
+         background-position: center;
+         background-repeat: no-repeat;
+         border-radius: 50%;
+         top: 7px;
+         left: 7px;
+         opacity: 0.9;
+         background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iY3VycmVudENvbG9yIiBjbGFzcz0iYmkgYmktc2VhcmNoIiB2aWV3Qm94PSIwIDAgMTYgMTYiPgogIDxwYXRoIGQ9Ik0xMS43NDIgMTAuMzQ0YTYuNSA2LjUgMCAxIDAtMS4zOTcgMS4zOThoLS4wMDFjLjAzLjA0LjA2Mi4wNzguMDk4LjExNWwzLjg1IDMuODVhMSAxIDAgMCAwIDEuNDE1LTEuNDE0bC0zLjg1LTMuODVhMS4wMDcgMS4wMDcgMCAwIDAtLjExNS0uMXpNMTIgNi41YTUuNSA1LjUgMCAxIDEtMTEgMCA1LjUgNS41IDAgMCAxIDExIDB6Ii8+Cjwvc3ZnPg==);
+         }
+         /*Table*/
+         #content {
+         border-collapse: collapse;
+         border-spacing: 0;
+         width: 84%;
+         margin: 32px auto; 
+         display: flex;
+         flex-direction: column;
+         }
+         #list-view {
+         border-collapse: collapse;
+         border-spacing: 0;
+         width: 100%;
+         margin: 32px auto;
+         }	
+         table {
+         padding: 32px 32px 64px;
+         width: 100%;
+         margin: 32px auto;   
+         }
+         a {
+         color: #0780ff;
+         cursor: pointer;
+         }
+         th {
+         border-bottom: 2em solid transparent;
+         }
+         th img {
+         vertical-align: bottom;
+         }
+         td {
+         border-bottom: 1px solid #eee;
+         padding:20px;
+         }
+         tbody {
+         background-color: #fff;
+         border-radius: 4px;
+         box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
+         padding: 32px 32px 64px;
+         }
+         td {
+         text-align: center; 
+         vertical-align: middle;		
+         }
+         i{
+         color: gray;
+         }
+         .child {
+         text-align: left; 
+         vertical-align: middle;
+         }
+         .child p, .child h2 {
+         width: 60%;
+         padding: 0px 30px 0px 30px;
+         }
+         .child button{
+         margin-left: 30px;
+         }
+         .gradient {
+         background-color: #000000;
+         background-clip: text;
+         background-image: linear-gradient( #ffffff00, #ffffff);
+         background-size: 100%;
+         -webkit-background-clip: text;
+         -moz-background-clip: text;
+         -webkit-text-fill-color: transparent; 
+         -moz-text-fill-color: transparent;
+         }
+         button {
+         color: #eee;
+         padding: 10px;
+         border-radius: 4px;
+         background-color: #0780ff;
+         border: none;
+         cursor: pointer;
+         }
+         /*Image in table*/
+         .author {
+         height:100%;
+         width: 80%;
+         display:flex;
+         justify-content: space-between;
+         }
+         .author-card {
+         height:100%;
+         display:flex;
+         justify-content: space-between;
+         }
+         .authorBox {
+         display: flex;
+         justify-content: center;
+         }
+         .sort img{
+         margin-top: 10px;
+         }
+         /*Open child*/
+         .open {
+         cursor: pointer;
+         color:#0780ff;
+         font-size: 25px;
+         }
+         .flex {
+         display: flex;
+         width: 84%;
+         margin: 32px auto;
+         justify-content: space-between;
+         }
+         /*Pagination*/
+         .page{
+         display: flex;
+         }
+         .pageCount {
+         padding: 10px;
+         display: flex;
+         cursor: pointer;
+         }
+         .pagination{
+         display: flex;
+         }
+         .pagination label {
+         display: flex;
+         align-items: center;
+         margin-right: 20px;
+         }
+         .number {
+         padding: 10px;
+         border:  0.5px solid rgb(236, 236, 236);
+         cursor: pointer;
+         }
+         #current {
+         background-color: #0780ff;
+         color: #eee;
+         }
+         /* Style the buttons */
+         .btn-view {
+         border: none;
+         outline: none;
+         padding: 12px 16px;
+         background-color: #0780ff;
+         cursor: pointer;
+         }
+         .btn-view:hover {
+         background-color: #3790ee;
+         }
+         .btn-view:focus {
+         background-color: black;
+         color: white;
+         }
+         /*Grid and list*/
+         .fa, .fa-bars {
+         color: white;
+         }
+         #grid-view {			
+         display: none;
+         flex-wrap: wrap;
+		 justify-content: space-between;
+         }
+         .card {			
+         width: 43%;
+         background-color: #fff;
+         border-radius: 4px;
+         box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
+         padding: 32px 32px 64px;
+         margin: 10px;
+         }
+         .card-flex {
+         display: flex;
+         flex-direction: row;
+         justify-content: space-between;
+         border-bottom: 1px solid #eee;
+         padding-bottom: 10px;
+         }
+         .authorBox {
+         display: flex;
+         justify-content: center;
+         }
+         .name-doc, p {
+         align-self: center;
+         }
+         .action {
+         display: flex;
+         justify-content: space-between;
+         }
+         .btn-action {
+         justify-content: flex-start;
+         }
+         .change {
+         margin-left: 5px;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="site">
+      <div class="site-header">UX Design</div>
+      <div class="site-navigation">
+         <h2>Design Academy</h2>
+         <h3>Courses</h3>
+         <ul class="nav-items">
+            <li class="nav-item">User Research</li>
+            <li class="nav-item selected">UX Design</li>
+            <li class="nav-item">Usability</li>
+         </ul>
+      </div>
+      <div class="site-sub-navigation">
+         <ul class="sub-nav-items">
+            <li class="sub-nav-item">Assignments</li>
+            <li class="sub-nav-item selected">Documents</li>
+            <li class="sub-nav-item">About</li>
+         </ul>
+      </div>
+      <div class="site-content">
+      <div class="documents">
+         <div class="document-tools">
+            <button class="document-add">Add document</button>
+            <div class="document-search">
+               <input class="document-search-input" type="search" placeholder="Sök">
+            </div>
+         </div>
+         <!-- Buttons to choose list or grid view -->
+         <button class="btn-view" onclick="listView()"><i class="fa fa-bars"></i> List</button>
+         <button class="btn-view" onclick="gridView()"><i class="fa fa-th-large"></i> Grid</button>				               
+      </div>
+      <!--Table-->
+      <div id="content">
+         <!--Table-->
+         <table id="list-view">
+            <thead>
+               <tr>
+                  <th>Type <img src="image/sort.jpg" alt="sort"></th>
+                  <th>Name <img src="image/sort.jpg" alt="sort"></th>
+                  <th>By <img src="image/sort.jpg" alt="sort"></th>
+                  <th>Upload <img src="image/sort.jpg" alt="sort"></th>
+                  <th>Last modified <img src="image/sort.jpg" alt="sort"></th>
+                  <th>Edit</th>
+                  <th>Delete</th>
+                  <th></th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr id="1" class="doc">
+                  <td><img src="image/pdf.jpg" alt="PDF format"></td>
+                  <td><a>Activity.pdf</a></td>
+                  <td>
+                     <div class="authorBox">
+                        <div class="author">
+                           <img src="image/man(1).png" alt="Avatar of Adam"> 
+                           <p>Adam Lindholm</p>
+                        </div>
+                     </div>
+                  </td>
+                  <td>2021-01-05</td>
+                  <td>2021-01-21 <i>by Alva Lindgren</i></td>
+                  <td><img src="image/pen.jpg" alt="pen"></td>
+                  <td><img src="image/delete.jpg" alt="delete"></td>
+                  <td class="open" id="open-1" onclick="toggle(this)">+</td>
+               </tr>
+               <tr>
+                  <td class="child" id="child-1" colspan="8">
+                     <h2>Lorem ipsum dolor</h2>
+                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum modi rem, porro aspernatur error dolorem nisi necessitatibus placeat illo? Illum numquam vel cupiditate harum. Veritatis optio labore delectus est veniam? Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam molestiae, molestias harum ut dolore omnis aut atque in assumenda enim expedita consequatur reiciendis minima accusantium vero ipsum deserunt, architecto consectetur.</p>
+                     <p class="gradient">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum modi rem, porro aspernatur error dolorem nisi necessitatibus placeat illo? Illum numquam vel cupiditate harum. Veritatis optio labore delectus est veniam? Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam molestiae, molestias harum ut dolore omnis aut atque in assumenda enim expedita consequatur reiciendis minima accusantium vero ipsum deserunt, architecto consectetur.</p>
+                     <button>Open document</button>
+                  </td>
+               </tr>
+               <tr id="2" class="doc">
+                  <td><img src="image/ppt.jpg" alt="PPT format"></td>
+                  <td><a>Design.ppt</a></td>
+                  <td>
+                     <div class="authorBox">
+                        <div class="author">
+                           <img src="image/woman.png" alt="Avatar of Beatrice"> 
+                           <p>Berit Lövström</p>
+                        </div>
+                     </div>
+                  </td>
+                  <td>2021-02-11</td>
+                  <td>2021-02-15 <i>by Kristian Berg</i></td>
+                  <td><img src="image/pen.jpg" alt="pen"></td>
+                  <td><img src="image/delete.jpg" alt="delete"></td>
+                  <td class="open" id="open-2" onclick="toggle(this)">+</td>
+               </tr>
+               <tr>
+                  <td class="child" id="child-2" colspan="8">
+                     <h2>Lorem ipsum dolor</h2>
+                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum modi rem, porro aspernatur error dolorem nisi necessitatibus placeat illo? Illum numquam vel cupiditate harum. Veritatis optio labore delectus est veniam? Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam molestiae, molestias harum ut dolore omnis aut atque in assumenda enim expedita consequatur reiciendis minima accusantium vero ipsum deserunt, architecto consectetur.</p>
+                     <p class="gradient">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum modi rem, porro aspernatur error dolorem nisi necessitatibus placeat illo? Illum numquam vel cupiditate harum. Veritatis optio labore delectus est veniam? Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam molestiae, molestias harum ut dolore omnis aut atque in assumenda enim expedita consequatur reiciendis minima accusantium vero ipsum deserunt, architecto consectetur.</p>
+                     <button>Open document</button>
+                  </td>
+               </tr>
+               <tr id="3" class="doc">
+                  <td><img src="image/xls.jpg" alt="XLS format"></td>
+                  <td><a>Learn.xls</a></td>
+                  <td>
+                     <div class="authorBox">
+                        <div class="author">
+                           <img src="image/man.png" alt="Avatar of Jonas"> 
+                           <p>Jonas Moraeus</p>
+                        </div>
+                     </div>
+                  </td>
+                  <td>2021-03-01</td>
+                  <td>2021-03-11 <i> by Göran Eklund</i></td>
+                  <td><img src="image/pen.jpg" alt="pen"></td>
+                  <td><img src="image/delete.jpg" alt="delete"></td>
+                  <td class="open" id="open-3" onclick="toggle(this)">+</td>
+               </tr>
+               <tr>
+                  <td class="child" id="child-3" colspan="8">
+                     <h2>Lorem ipsum dolor</h2>
+                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum modi rem, porro aspernatur error dolorem nisi necessitatibus placeat illo? Illum numquam vel cupiditate harum. Veritatis optio labore delectus est veniam? Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam molestiae, molestias harum ut dolore omnis aut atque in assumenda enim expedita consequatur reiciendis minima accusantium vero ipsum deserunt, architecto consectetur.</p>
+                     <p class="gradient">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum modi rem, porro aspernatur error dolorem nisi necessitatibus placeat illo? Illum numquam vel cupiditate harum. Veritatis optio labore delectus est veniam? Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam molestiae, molestias harum ut dolore omnis aut atque in assumenda enim expedita consequatur reiciendis minima accusantium vero ipsum deserunt, architecto consectetur.</p>
+                     <button>Open document</button>
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+         <div id="grid-view">
+            <div class="card">
+               <div class="card-flex">
+                  <img src="image/pdf.jpg" alt="pdf">
+                  <a class="name-doc">Activity.pdf</a>
+                  <div class="author-card"><img src="image/man(1).png" alt="Avatar of Adam"> </div>
+                  <p>Adam Lindholm</p>
+                  <p>2021-01-05</p>
+               </div>
+               <div class="text">
+                  <h2>Lorem ipsum dolor</h2>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum modi rem, porro aspernatur error dolorem nisi necessitatibus placeat illo? </p>
+                  <p class="gradient">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum modi rem, porro aspernatur error dolorem nisi necessitatibus placeat illo. sit amet consectetur adipisicing elit. Voluptatum modi rem</p>
+                  <div class="action">
+                     <button class="btn-action">Open document</button>
+                     <div class="change"><img src="image/pen.jpg" alt="pen">
+                        <img src="image/delete.jpg" alt="delete">
+                     </div>
+                  </div>
+               </div>
+            </div>
+			<div class="card">
+				<div class="card-flex">
+					<img src="image/ppt.jpg" alt="PPT format">
+				   <a class="name-doc">Design.ppt</a>
+				   <div class="author-card"> <img src="image/woman.png" alt="Avatar of Beatrice"></div>
+				   <p>Berit Lövström</p>
+				   <p>2021-02-11</p>
+				</div>
+				<div class="text">
+				   <h2>Lorem ipsum dolor</h2>
+				   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum modi rem, porro aspernatur error dolorem nisi necessitatibus placeat illo? </p>
+				   <p class="gradient">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum modi rem, porro aspernatur error dolorem nisi necessitatibus placeat illo. sit amet consectetur adipisicing elit. Voluptatum modi rem</p>
+				   <div class="action">
+					  <button class="btn-action">Open document</button>
+					  <div class="change"><img src="image/pen.jpg" alt="pen">
+						 <img src="image/delete.jpg" alt="delete">
+					  </div>
+				   </div>
+				</div>
+			 </div>
+			 <div class="card">
+				<div class="card-flex">
+					<img src="image/xls.jpg" alt="XLS format">
+				   <a class="name-doc">Learn.xls</a>
+				   <div class="author-card">  <img src="image/man.png" alt="Avatar of Jonas"> </div>
+					<p>Jonas Moraeus</p>
+				   <p>2021-03-11</p>
+				</div>
+				<div class="text">
+				   <h2>Lorem ipsum dolor</h2>
+				   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum modi rem, porro aspernatur error dolorem nisi necessitatibus placeat illo? </p>
+				   <p class="gradient">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum modi rem, porro aspernatur error dolorem nisi necessitatibus placeat illo. sit amet consectetur adipisicing elit. Voluptatum modi rem</p>
+				   <div class="action">
+					  <button class="btn-action">Open document</button>
+					  <div class="change"><img src="image/pen.jpg" alt="pen">
+						 <img src="image/delete.jpg" alt="delete">
+					  </div>
+				   </div>
+				</div>
+			 </div>
+			 <div class="card">
+				<div class="card-flex">
+					<img src="image/xls.jpg" alt="XLS format">
+				   <a class="name-doc">Learning is good.xls</a>
+				   <div class="author-card">  <img src="image/julia.png" alt="Avatar of Julia"> </div>
+					<p>Julia Gustavsson</p>
+				   <p>2021-03-29</p>
+				</div>
+				<div class="text">
+				   <h2>Lorem ipsum dolor</h2>
+				   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum modi rem, porro aspernatur error dolorem nisi necessitatibus placeat illo? </p>
+				   <p class="gradient">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum modi rem, porro aspernatur error dolorem nisi necessitatibus placeat illo. sit amet consectetur adipisicing elit. Voluptatum modi rem</p>
+				   <div class="action">
+					  <button class="btn-action">Open document</button>
+					  <div class="change"><img src="image/pen.jpg" alt="pen">
+						 <img src="image/delete.jpg" alt="delete">
+					  </div>
+				   </div>
+				</div>
+			 </div>
+     
+         </div>
+      </div>
+      <!--Page navgation-->
+      <div class="flex">
+         <div class="page">
+            <div  class="pageCount"><</div>
+            <div id="current"class="pageCount">1</div>
+            <div class="pageCount">2</div>
+            <div class="pageCount">3</div>
+            <div class="pageCount">4</div>
+            <div class="pageCount">></div>
+         </div>
+         <!--Pagination-->
+         <div class="pagination">
+            <label for="pagination">Documents per page:</label>
+            <select class="number" name="pagination">
+               <option value="25">25</option>
+               <option value="50">50</option>
+               <option value="75">75</option>
+               <option value="100">100</option>
+               <option value="all">All</option>
+            </select>
+         </div>
+      </div>
+      <script>
+         //Open and close child element in table
+         var childList = document.getElementsByClassName("child")
+         var openList = document.getElementsByClassName("open")
+         
+         for(var i = 0; i < childList.length; i++) {
+         	childList[i].style.display = "none"
+         }
+         				
+         function toggle(e){
+         	var content = document.getElementById("child-" + e.parentNode.id);
+         	var openClose = document.getElementById("open-" + e.parentNode.id);
+         
+         	if(content.style.display === "none"){
+         		content.style.display = "table-cell"
+         		openClose.innerHTML = "-"
+         	}else {
+         		content.style.display = "none"
+         		openClose.innerHTML = "+"
+         	}
+         }
+         
+         function listView() {
+         
+         	list = document.getElementById('list-view')
+         	grid = document.getElementById('grid-view')
+         	list.style.display = 'table';
+         	grid.style.display = 'none';
+         
+         }
+         
+         function gridView() {
+         
+         	list = document.getElementById('list-view')
+         	grid = document.getElementById('grid-view')
+         	grid.style.display = 'flex';
+         	list.style.display = 'none';
+         	
+         }
+      </script>
+   </body>
+</html>
+
